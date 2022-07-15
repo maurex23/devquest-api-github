@@ -103,7 +103,7 @@ main {
   width: 50%;
 }
 
-.container .profile-data .info img{
+.container .profile-data .info .avatar{
   width: 50%;
   border-radius: 50%;
   border: 10px solid rgb(138, 105, 255);
@@ -151,6 +151,43 @@ main {
 .container .profile-data.hide{
   display: none;
 }
+
+.social{
+  font-size: 15px;
+  background-color:rgba(138, 105, 255, 0.5);
+  padding: 10px;
+  margin: 5px auto;
+  border-radius: 55px;
+  max-width: 50%;
+  cursor: pointer;
+}
+
+.social:hover {
+  background-color: #92c2f1;
+}
+
+.hidden {
+  display: none;
+}
+
+.container .profile-data .info .followerImg img {
+  max-width: 50px;
+  border-radius: 50%;
+}
+.followers {
+  max-width: 500px;
+  display: flex;
+  flex-flow: row wrap;
+  gap: 15px;
+}
+.following {
+  max-width: 500px;
+  display: flex;
+  flex-flow: row wrap;
+  gap: 15px;
+}
+
+
 
 @media (max-width: 1280px) {
   .container {
