@@ -16,7 +16,6 @@ const screen = {
 
         let repositoriesItens = ''
         user.repositories.forEach(repo => repositoriesItens += `<li><a href='${repo.html_url}' target="_blank">${repo.name}</a></li>`)
-
         if (user.repositories.length > 0) {
             this.userProfile.innerHTML += `
             <div class='repositories section'>
@@ -30,7 +29,26 @@ const screen = {
         this.userProfile.innerHTML = `
             <h3> Usuário não encontrado </h3>
         `
+    },
+    renderEvents(event, link, name, message) {
+        let events = ''
+        event.forEach((event, i) => {
+            events += `<li><a href='${link[i]}' target='_blank'>${name[i]}</a> - ${message[i]} </li>`
+        })
+        setTimeout(() => {
+            this.userProfile.innerHTML += `
+            <div>
+                <h2>Eventos</h2>
+                <ul>${events}</ul>
+            </div>`
+        }, 2000)
+    }, 
+    renderNoEvents() {
+        this.userProfile.innerHTML += `
+                <h2>Este usuário não possui eventos</h2>
+            `
     }
+
 
 }
 

@@ -8,10 +8,13 @@ import { user } from './objects/user.js'
 import { screen } from './objects/screen.js'
 
 import { setFollowers, setFollowing } from './services/social.js'
+import { getEvents, getRepoLink } from './services/events.js'
+
+import { Events } from './objects/events.js'
 
 input.addEventListener('keypress', (e) => {
     if (e.keyCode === 13) {
-        runUser()        
+        runUser()
     }
 })
 
@@ -54,7 +57,6 @@ function runUser() {
     checkUser()
     setTimeout(() => {
         const followers = document.querySelector('.followersSocial')
-        console.log(followers)
         setFollowers(input.value)
         followers.addEventListener('click', () => {
             document.querySelectorAll('.follower').forEach(index => {
@@ -63,7 +65,6 @@ function runUser() {
 
         })
         const following = document.querySelector('.followingSocial')
-        console.log(following)
         setFollowing(input.value)
         following.addEventListener('click', () => {
             document.querySelectorAll('.followingUser').forEach(index => {
@@ -72,4 +73,62 @@ function runUser() {
 
         })
     }, 3000)
+
+    setEvent()
 }
+
+async function setEvent() {
+    const eventObject = await getEvents(input.value)
+    let eventWanted = eventObject.filter(event => {
+        return event.type === 'PushEvent' || event.type === 'CreateEvent'
+    })
+    eventWanted = eventWanted.slice(0, 10)
+    repoStats(eventWanted)
+    console.log(eventWanted)
+    if (eventWanted.length === 0) {
+        screen.renderNoEvents()
+    } else {
+        let index = 0
+        let intervId = 0
+        intervId = setInterval(() => {
+            if(index < 10) {
+                index++
+                console.log(Events.names)
+                if (Events.links.length > 0) {
+                    screen.renderEvents(eventWanted, Events.links, Events.names, Events.messages)
+                    clearInterval(intervId)
+                }
+            } else {
+                clearInterval(intervId)
+            }
+        }, 500)
+    }
+
+    
+
+    // setTimeout(() => {
+    //     screen.renderEvents(eventWanted, Events.links, Events.names, Events.messages)
+    //     console.log(Events.links)
+    //     console.log(Events.names)
+    //     console.log(Events.messages)
+    // }, 6000)
+
+}
+
+async function repoStats(events) {
+    events.forEach(async event => {
+        const link = await getRepoLink(event)
+        Events.links.push(link)
+        const name = await event.repo.name
+        Events.names.push(name)
+        try {
+            const message = await event.payload.commits[0].message
+            Events.messages.push(message)
+        } catch (e) {
+            Events.messages.push('Este evento nao possui mensagem')
+        }
+    })
+}
+
+
+
