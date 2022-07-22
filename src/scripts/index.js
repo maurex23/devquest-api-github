@@ -12,113 +12,88 @@ import { getEvents, getRepoLink } from './services/events.js'
 
 import { Events } from './objects/events.js'
 
-input.addEventListener('keypress', (e) => {
+input.addEventListener('keypress', async (e) => {
     if (e.keyCode === 13) {
-        runUser()
+        await runUser()
     }
 })
 
-btn.addEventListener('click', () => {
-    runUser()
+
+btn.addEventListener('click', async () => {
+    await runUser()
 })
 
-function selectUser() {
-    async function getUserData() {
-        const name = input.value
-        const userResponse = await getUser(name)
-        const repositoriesResponse = await getRepos(name)
-        user.setInfo(userResponse)
-        user.setRepositories(repositoriesResponse)
+async function runUser() {
+    await checkUser()
+    await setSocial()
+    await setEvent().then(() => {
+        console.log('test3')
+        clickButton()
+    })
 
-        screen.renderUser(user)
-    }
-    getUserData()
-}
-
-function checkInput() {
-    if (input.value == 0) {
-        alert('Porfavor Preencha o campo com nome do Usuário do GitHub')
-    } else {
-        selectUser()
-    }
 }
 
 async function checkUser() {
     const name = input.value
     const userResponse = await getUser(name)
     if (userResponse.message !== 'Not Found') {
-        checkInput()
+        await checkInput()
     } else {
         screen.renderNotFound()
     }
 }
 
-function runUser() {
-    checkUser()
-    setTimeout(() => {
-        const followers = document.querySelector('.followersSocial')
-        setFollowers(input.value)
-        followers.addEventListener('click', () => {
-            document.querySelectorAll('.follower').forEach(index => {
-                index.classList.toggle('hidden')
-            })
+async function setSocial() {
+    await setFollowers(input.value)
+    await setFollowing(input.value)
+}
 
+function clickButton() {
+    const followers = document.querySelector('.followersSocial')
+    followers.addEventListener('click', () => {
+        document.querySelectorAll('.follower').forEach(index => {
+            index.classList.toggle('hidden')
         })
-        const following = document.querySelector('.followingSocial')
-        setFollowing(input.value)
-        following.addEventListener('click', () => {
-            document.querySelectorAll('.followingUser').forEach(index => {
-                index.classList.toggle('hidden')
-            })
+    })
 
+    const following = document.querySelector('.followingSocial')
+    following.addEventListener('click', () => {
+        console.log('clique')
+        document.querySelectorAll('.followingUser').forEach(index => {
+            index.classList.toggle('hidden')
         })
-    }, 3000)
-
-    setEvent()
+    })
 }
 
 async function setEvent() {
-    const eventObject = await getEvents(input.value)
-    let eventWanted = eventObject.filter(event => {
+    console.log('test1')
+    const eventList = await getEvents(input.value)
+    let eventWanted = eventList.filter(event => {
         return event.type === 'PushEvent' || event.type === 'CreateEvent'
     })
     eventWanted = eventWanted.slice(0, 10)
-    repoStats(eventWanted)
-    console.log(eventWanted)
-    if (eventWanted.length === 0) {
-        screen.renderNoEvents()
-    } else {
-        let index = 0
-        let intervId = 0
-        intervId = setInterval(() => {
-            if(index < 10) {
-                index++
-                console.log(Events.names)
-                if (Events.links.length > 0) {
-                    screen.renderEvents(eventWanted, Events.links, Events.names, Events.messages)
-                    clearInterval(intervId)
-                }
-            } else {
-                clearInterval(intervId)
-            }
-        }, 500)
-    }
-
+    await repoStats(eventWanted)
+    screen.renderEvents(eventWanted, Events.links, Events.names, Events.messages)
+    console.log('depois')
     
-
-    // setTimeout(() => {
-    //     screen.renderEvents(eventWanted, Events.links, Events.names, Events.messages)
-    //     console.log(Events.links)
-    //     console.log(Events.names)
-    //     console.log(Events.messages)
-    // }, 6000)
 
 }
 
+async function checkInput() {
+    if (input.value == 0) {
+        alert('Porfavor Preencha o campo com nome do Usuário do GitHub')
+    } else {
+        await getUserData()
+    }
+}
+
+
 async function repoStats(events) {
-    events.forEach(async event => {
+    for (const event of events ) {
+        console.log('repoStats')
         const link = await getRepoLink(event)
         Events.links.push(link)
+        console.log(Events.links)
         const name = await event.repo.name
         Events.names.push(name)
         try {
@@ -127,8 +102,49 @@ async function repoStats(events) {
         } catch (e) {
             Events.messages.push('Este evento nao possui mensagem')
         }
-    })
+    }
+
+// async function repoStats(events) {
+//     events.forEach(async event => {
+//         console.log('repoStats')
+//         const link = await getRepoLink(event)
+//         Events.links.push(link)
+//         console.log(Events.links)
+//         const name = await event.repo.name
+//         Events.names.push(name)
+//         try {
+//             const message = await event.payload.commits[0].message
+//             Events.messages.push(message)
+//         } catch (e) {
+//             Events.messages.push('Este evento nao possui mensagem')
+//         }
+//         console.log('depois')
+        
+//     })
+    
+
+    // if (events.length === 0) {
+    //     screen.renderNoEvents()
+    // } else {
+    //     // setTimeout(() => {
+    //     console.log('Depois do RepoStats')
+    //     screen.renderEvents(events, Events.links, Events.names, Events.messages)
+    //     // }, 500)
+    // }
+
+
 }
+
+async function getUserData() {
+    const name = input.value
+    const userResponse = await getUser(name)
+    const repositoriesResponse = await getRepos(name)
+    user.setInfo(userResponse)
+    user.setRepositories(repositoriesResponse)
+
+    screen.renderUser(user)
+}
+
 
 
 
