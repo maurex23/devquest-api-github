@@ -5,12 +5,12 @@ const screen = {
         <div class='info'>
         <img class='avatar' src='${user.avatarUrl}' alt="Foto do Usuário" />
         <div class='data'>
-            <h1> ${user.name ?? 'Não possui nome cadastrado 🥲'}</h1>
+            <h1> ${user.name ?? 'Não possui nome cadastrado 😿'}</h1>
             <h2 class='social followersSocial'> Seguidores: ${user.followers}</h2>
             <div class='followers'> </div>
             <h2 class='social followingSocial'> Seguindo: ${user.following} </h2>
             <div class='following'></div>
-            <p> ${user.bio ?? 'Não possui bio cadastrada 🥲'} </p>
+            <p> ${user.bio ?? 'Não possui bio cadastrada 😿'} </p>
         </div>
         </div>`
 
