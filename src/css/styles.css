@@ -187,7 +187,20 @@ main {
   gap: 15px;
 }
 
+/* ---------------repositories */
+.repositorieItem {
+  display: flex;
+}
 
+.repositoriesStats {
+  display: flex;
+  gap: 15px;
+}
+.repositoriesStats li {
+  border-radius: 10%;
+  padding: 5px;
+  background-color: rgb(221, 0, 255);
+}
 
 @media (max-width: 1280px) {
   .container {

@@ -12,8 +12,6 @@ const user = {
         this.avatarUrl = gitHubUser.avatar_url
         this.name = gitHubUser.name
         this.followers = gitHubUser.followers
-        // this.followersUrl = 
-
         this.following = gitHubUser.following
         this.followingUrl = gitHubUser.following_url
         this.bio = gitHubUser.bio

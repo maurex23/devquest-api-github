@@ -27,7 +27,6 @@ async function runUser() {
     await checkUser()
     await setSocial()
     await setEvent().then(() => {
-        console.log('test3')
         clickButton()
     })
 
@@ -58,7 +57,6 @@ function clickButton() {
 
     const following = document.querySelector('.followingSocial')
     following.addEventListener('click', () => {
-        console.log('clique')
         document.querySelectorAll('.followingUser').forEach(index => {
             index.classList.toggle('hidden')
         })
@@ -66,17 +64,14 @@ function clickButton() {
 }
 
 async function setEvent() {
-    console.log('test1')
     const eventList = await getEvents(input.value)
     let eventWanted = eventList.filter(event => {
         return event.type === 'PushEvent' || event.type === 'CreateEvent'
     })
     eventWanted = eventWanted.slice(0, 10)
     await repoStats(eventWanted)
-    screen.renderEvents(eventWanted, Events.links, Events.names, Events.messages)
-    console.log('depois')
-    
 
+    screen.renderEvents(eventWanted, Events.links, Events.names, Events.messages)
 }
 
 async function checkInput() {
@@ -84,16 +79,15 @@ async function checkInput() {
         alert('Porfavor Preencha o campo com nome do Usuário do GitHub')
     } else {
         await getUserData()
+        // forks_count watchers_count stargazers_count language
     }
 }
 
 
 async function repoStats(events) {
     for (const event of events ) {
-        console.log('repoStats')
         const link = await getRepoLink(event)
         Events.links.push(link)
-        console.log(Events.links)
         const name = await event.repo.name
         Events.names.push(name)
         try {
@@ -103,36 +97,6 @@ async function repoStats(events) {
             Events.messages.push('Este evento nao possui mensagem')
         }
     }
-
-// async function repoStats(events) {
-//     events.forEach(async event => {
-//         console.log('repoStats')
-//         const link = await getRepoLink(event)
-//         Events.links.push(link)
-//         console.log(Events.links)
-//         const name = await event.repo.name
-//         Events.names.push(name)
-//         try {
-//             const message = await event.payload.commits[0].message
-//             Events.messages.push(message)
-//         } catch (e) {
-//             Events.messages.push('Este evento nao possui mensagem')
-//         }
-//         console.log('depois')
-        
-//     })
-    
-
-    // if (events.length === 0) {
-    //     screen.renderNoEvents()
-    // } else {
-    //     // setTimeout(() => {
-    //     console.log('Depois do RepoStats')
-    //     screen.renderEvents(events, Events.links, Events.names, Events.messages)
-    //     // }, 500)
-    // }
-
-
 }
 
 async function getUserData() {

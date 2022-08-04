@@ -15,7 +15,18 @@ const screen = {
         </div>`
 
         let repositoriesItens = ''
-        user.repositories.forEach(repo => repositoriesItens += `<li><a href='${repo.html_url}' target="_blank">${repo.name}</a></li>`)
+        user.repositories.forEach(repo => repositoriesItens += `
+        <li class='repositorieItem'>
+            <a href='${repo.html_url}' target="_blank">
+            ${repo.name}
+            <ul class="repositoriesStats">
+                <li>🍴 ${repo.forks_count}</li>
+                <li>🌟 ${repo.stargazers_count}</li>
+                <li>👀 ${repo.watchers_count}</li>
+                <li>👅 ${repo.language}</li>
+            </ul>
+            </a>
+        </li>`)
         if (user.repositories.length > 0) {
             this.userProfile.innerHTML += `
             <div class='events'>
@@ -34,13 +45,11 @@ const screen = {
     },
     renderEvents(event, link, name, message) {
         let events = ''
-        console.log(link)
         event.forEach((event, i) => {
 
             events += `<li><a href='${link[i].html_url}' target='_blank'>${name[i]}</a> - ${message[i]} </li>`
         })
 
-        // document.querySelector('.events').innerHTML += `
         this.userProfile.innerHTML += `
             <h2>Eventos</h2>
             <ul>${events}</ul>`
