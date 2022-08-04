@@ -1,2 +1,8 @@
-# projeto-inicial-fetch-github-api
-Repositório contendo os arquivos iniciais do projeto de Fetch e GitHub API
+# projeto-fetch-github-api
+Quest do curso Dev Quest para exercitar fetch e API
+
+Foi utilizada a API do github para a realizacao do exercicio.
+
+Demostração:
+
+
